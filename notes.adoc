@@ -1,0 +1,22 @@
+
+* Structure UML class diagram
+* Functional BPMN
+* Behavioural Usecase diagrams
+
+== Risks
+
+* Security risk oriented BPMN - Risk 1
+* Security risk oriented misuse cases - Risk 2
+* Security risk oriented text template - Risk 3
+* MAL activity diagrams - Risk 4
+
+== 
+
+* Security requirements ara defined
+    - UML class diagram
+* Controls are defined:
+    - BPMN or usecase diagrams
+
+Access control model
+
+1. Identify 2 most prominent security risks

@@ -1,0 +1,64 @@
+@startuml
+'left to right direction
+' title Security oriented misuse case risk analysis diagram for risk TRR-AUTH-1
+:Home owner: as ho
+:Violator: as v
+'skinparam UsecaseFontSize 30
+' skinparam labelFontSize 10
+' skinparam linetype ortho
+skinparam usecase {       
+    BackgroundColor<<misuse>> black
+    BorderColor<<misuse>> black
+    FontColor<<misuse>> white
+    BackgroundColor<<impact>> lightgrey
+    BackgroundColor<<vulnerability>> lightgrey
+    BackgroundColor<<security criterion>> lightgreen
+}
+
+rectangle "Smart home" {
+    'In home display
+    usecase "Enter\n consumption control data" as ihd_submit_control
+    usecase "Encrypt\n consumption control data" as ihd_encrypt
+    usecase "Forward\n consumption control data" as ihd_send_control
+    usecase "Consumption control data\n has no unique identifier" as ihd_no_unique_identifier <<vulnerability>>
+    usecase "Collect forwarded\n consumption control data" as mis_collect <<misuse>>
+    usecase "Replay consumption control data" as mis_replay <<misuse>> 
+
+    'ESI
+    usecase "Authenticity\n of consumption control data" as ihd_authenticity <<security criterion>>
+    usecase "Collect consumption control data" as esi_collect
+    usecase "Unauthentic\n manipulation of appliances" as ihd_manipulate_appliances_misuse <<impact>>
+}
+
+' Normal flow
+' ho -- ihd_display
+ho -- ihd_submit_control
+' ihd_send_control <.. ihd_manipulate_appliances: <<include>>
+' ihd_submit_control <.. ihd_send_control: <<include>>
+ihd_submit_control ..> ihd_encrypt: <<include>>
+ihd_encrypt ..> ihd_send_control: <<include>>
+
+
+'security criteria and vulnerabilities
+esi_collect <.. ihd_authenticity: <<constraint of>>
+ihd_manipulate_appliances_misuse ..> ihd_authenticity: <<negate>>
+ihd_encrypt ..> ihd_no_unique_identifier: <<include>>
+
+'security requirements
+' ihd_encrypt ..> sec_req_add_unique_id: <<include>>
+' mis_replay <.. sec_req_add_unique_id: <<mitigate>>
+
+
+ihd_send_control ..> esi_collect: <<include>>
+' esi_collect ..> sec_req_store_processed_id: <<include>>
+' sec_req_store_processed_id ..> mis_replay: <<mitigate>>
+
+
+'Misuse
+v -- mis_collect
+v -- mis_replay
+mis_collect ..> ihd_send_control: <<threaten>>
+mis_collect <.. mis_replay: <<include>>
+mis_replay ..> ihd_manipulate_appliances_misuse: <<lead to>>
+mis_replay ..> ihd_no_unique_identifier: <<exploit>>
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+mainframe <<rbac>>
+title Role based access control
+skinparam Activity {
+    FontColor<<misuse>> white
+    BackgroundColor<<misuse>> black
+}
+
+skinparam Note {
+    FontColor black
+    BackgroundColor white
+}
+
+' title TRR-AUTHOR-1
+|In home display|
+|ESI|
+start
+fork
+    |In home display|
+    :Submit consumption control data;
+fork again
+    |Distributer of energy resources|
+    :Submit consumption control data;
+
+|ESI|
+end fork
+    :Collect consumption control data;
+    :Process data;
+    :Forward consumption control data;
+|Smart electricity meter|
+:Receive consumption control data;
+:Operate on consumption control data;
+
+    ' :Decide on energy Source usage;
+    ' :Decide on energy on/offloading;
+stop
+
+@enduml

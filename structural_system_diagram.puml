@@ -1,0 +1,64 @@
+@startuml
+' Add title
+' skinparam linetype ortho
+' title Structural System diagram
+class "Home display" as hd
+class "Smart electricity meter" as sem
+class "Distributer Eneregy Resources" as der
+class "Energy Service Interface" as esi
+'class "Advanced Metering Infrastructure network" as amin
+
+class hd {
+    - Consumption control data
+    - Consumption data
+    - Meter data
+    - Energy price data
+    - Energy offload data
+    - collectConsumptionControlData()
+    - displayData()
+    - enterConsumptionControlData()
+    - encryptConsumptionControlData()
+    - forwardConsumptionControlData()
+}
+
+class sem {
+    - Consumption control data
+    - Consumption data
+    - Meter data
+    - collectConsumptionControlData()
+    - meterEnergyConsumption()
+    - submitSEMData()
+}
+
+class der {
+    - Consumption control data
+    - Energy offload data
+    - collectConsumptionControlData()
+    - processEnergyOffloadControlData()
+    - submitDERData()
+}
+
+class esi {
+    - Consumption control data
+    - Energy price data
+    - Consumption data
+    - Meter data
+    - Grid feedback data
+    - collectConsumptionControlData()
+    - collectDERData()
+    - collectSEMData()
+    - processData()
+    - decideOnEnergySourceUsage()
+    - sendEnergySourceUsageData()
+    - decideOnEnergyOn/Offloading()
+    - sendEnergyOn/Offloading()
+}
+
+'sem --|> amin
+'amin --|> esi
+hd "1..*" -l- "1" esi : > uses
+sem "1" -r- "1"  esi : > uses 
+der "1" -- "1"  esi : uses >
+
+' footer Secure Softwre Modelling, Group: TRR
+@enduml

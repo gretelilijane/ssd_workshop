@@ -1,0 +1,58 @@
+@startuml
+title Mal-activities for security risk management
+skinparam Activity {
+    FontColor<<misuse>> white
+    BackgroundColor<<misuse>> black
+}
+
+skinparam Note {
+    FontColor black
+    BackgroundColor white
+
+    BackgroundColor<<vulnerability>> gray
+}
+
+' title TRR-AUTHOR-1
+|Smart Electricity Meter|
+start
+:Routine Reboot;
+:Check for firmare updates;
+floating note right 
+    Outdated firmware TODO: gray
+end note 
+|Malicious firmware|
+|Intercepted channel|
+|Violator|
+:Intercept firmware update request; <<misuse>>
+|Intercepted channel|
+:Inject malicious firmware; <<misuse>>
+' :Intercept firmware update request; <<misuse>>
+
+|Smart Electricity Meter|
+:Receive firmware update;
+' |Smart Electricity Meter|
+' :Notify server of firmware update;
+' |Smart Electricity Meter|
+' :Operate per user-defined parameters;
+|Malicious firmware|
+:Send unauthorized consumption\n control data; <<misuse>>
+|Smart Electricity Meter|
+:Receive consumption control data;
+floating note right
+    Authorisation of
+    consumption control data
+end note 
+:Operate on consumption control data;
+' while (Command to operate?) is (Yes)
+' |Violator|
+' :Send unauthorized commands; <<misuse>>
+' |Smart Electricity Meter|
+' :Operate on sent commands; <<misuse>>
+' endwhile (No)
+' -[hidden]->
+' detach
+
+
+stop
+
+@enduml

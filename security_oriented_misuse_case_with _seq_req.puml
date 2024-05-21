@@ -1,0 +1,52 @@
+@startuml
+'left to right direction
+' title Security oriented misuse case diagram with security requirements for risk TRR-AUTH-1
+:Home owner: as ho
+:Violator: as v
+
+' skinparam linetype ortho
+skinparam usecase {       
+    BackgroundColor<<misuse>> black
+    BorderColor<<misuse>> black
+    FontColor<<misuse>> white
+    BackgroundColor<<impact>> lightgrey
+    BackgroundColor<<vulnerability>> lightgrey
+    BackgroundColor<<security criterion>> lightgreen
+}
+
+rectangle "Smart Home" {
+    
+    usecase "Submit\n consumption control data" as ihd_submit_control
+    usecase "Add <&lock-locked>\n uuids to each messages" as sec_req_add_unique_id <<security requirement>>
+    usecase "Encrypt\n consumption control data" as ihd_encrypt
+    usecase "Forward\n consumption control data" as ihd_send_control
+    usecase "Collect forwarded consumption control data" as mis_collect <<misuse>>
+    usecase "Replay consumption control data" as mis_replay <<misuse>> 
+    
+    'ESI
+    usecase "Store processed<&lock-locked>\n message uuids" as sec_req_store_processed_id <<security requirement>>
+    usecase "Collect consumption control data" as esi_collect
+    
+
+}
+
+
+ho -- ihd_submit_control
+ihd_submit_control ..> ihd_encrypt: <<include>>
+ihd_encrypt ..> ihd_send_control: <<include>>
+ihd_encrypt <.. sec_req_add_unique_id: <<include>>
+sec_req_add_unique_id ..> mis_replay: <<mitigate>>
+
+
+esi_collect ..> sec_req_store_processed_id: <<include>>
+sec_req_store_processed_id ..> mis_replay: <<mitigate>>
+
+ihd_send_control ..> esi_collect: <<include>>
+
+
+'Misuse
+v -- mis_collect
+v -- mis_replay
+mis_collect ..> ihd_send_control: <<threaten>>
+mis_collect <.. mis_replay: <<include>>
+@enduml

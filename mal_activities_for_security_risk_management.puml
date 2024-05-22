@@ -1,25 +1,22 @@
 @startuml
-title Mal-activities for security risk management
+' title Mal-activities for security risk management
 skinparam Activity {
     FontColor<<misuse>> white
     BackgroundColor<<misuse>> black
 }
 
-skinparam Note {
+skinparam note {
     FontColor black
     BackgroundColor white
-
-    BackgroundColor<<vulnerability>> gray
 }
+
 
 ' title TRR-AUTHOR-1
 |Smart Electricity Meter|
 start
 :Routine Reboot;
 :Check for firmare updates;
-floating note right 
-    Outdated firmware TODO: gray
-end note 
+floating note right #gray: Outdated firmware
 |Malicious firmware|
 |Intercepted channel|
 |Violator|
